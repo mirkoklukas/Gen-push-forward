@@ -1,0 +1,10 @@
+# _files are private, helps me keeping the repo clean,
+# while prototyping
+**/_*/
+**/_*
+**/_*.*
+!**/__*__.py
+**/.DS_Store
+
+# Jupyter Notebook
+**/.ipynb_checkpoints
