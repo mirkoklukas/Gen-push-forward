@@ -20,10 +20,10 @@ A sample $x \sim P$ defines a sample $y = f(x) \sim (f_*P)$.
 (Thus we need to provide $p, f, f^{-1}$, and $\det df_x$ to implement a corresponding pushforward object...)
 
 ![image](imgs/push-forward_1.png)
-**Figure 1.** *Left:* Comparing the analytically computed density of the push-forward with the approximate empirical density from a number of samples. *Right:* Comparing the density of the push-forward with the wrong density that is missing the correction term.
+**Figure 1.** Visualization of Example 1 below &mdash; Pushing forward a normal distribution by the exponential function. *Left:* Comparing the analytically computed density of the push-forward with the approximate empirical density from a number of samples. *Right:* Comparing the density of the push-forward with the wrong density that is missing the correction term.
 
 
-# Continuous Examples 
+# Example 1 (continuous example)
 
 Let's consider the pushforward of
 
@@ -69,7 +69,7 @@ w = logpdf(Q, 1.0, args...)
 end
 ```
 
-# Discrete example
+# Example 2 (discrete example)
 
 Let's consider the pushforward of 
 
