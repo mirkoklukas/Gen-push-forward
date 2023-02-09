@@ -25,14 +25,18 @@ A sample $x \sim P$ defines a sample $y = f(x) \sim (f_*P)$.
 
 # Continuous Examples 
 
-Let's consider the pushforward of 
+Let's consider the pushforward of
+
 $$
     p(x) = N(x ; \mu=0,\sigma=1)
 $$
+
 under 
+
 $$
     f(x) = \exp(x).
 $$
+
 Note that $f$ is not one-to-one but invertible over its image. We can 
 still use our pushforward object by incorporating `OutOfDomain()` values (or `out_of_domain`) in the inverse of $f$.
 
@@ -66,7 +70,6 @@ end
 ```
 
 # Discrete example
-
 
 Let's consider the pushforward of 
 
