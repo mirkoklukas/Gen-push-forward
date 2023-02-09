@@ -14,7 +14,7 @@ in_domain(f::Function, xs) = filter( x -> f(x) != out_of_domain, xs)
     
 The push-forward of a distribution ...
 """
-struct PushForward{T,T′} <: Gen.Distribution{T} 
+struct PushForward{T,T′} <: Gen.Distribution{T′} 
     dist :: Gen.Distribution{T}
     f       :: Function
     finv    :: Function
