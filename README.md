@@ -19,8 +19,11 @@ A sample $x \sim P$ defines a sample $y = f(x) \sim (f_*P)$.
 
 (Thus we need to provide $p, f, f^{-1}$, and $\det df_x$ to implement a corresponding pushforward object...)
 
-![image](imgs/push-forward_1.png)
+![image](imgs/push-forward_1d_example.png)
 **Figure 1.** Visualization of Example 1 below &mdash; Pushing forward a normal distribution by the exponential function. *Left:* Comparing the analytically computed density of the push-forward with the approximate empirical density from a number of samples. *Right:* Comparing the density of the push-forward with the wrong density that is missing the correction term.
+
+![image](imgs/push-forward_2d_example.png)
+**Figure 2.** Pushing forward a multivariate Gaussian by $f:(x,y) \mapsto (x+1,exp(y))$. Densities of the gaussian (left), its push forward (middle) by $f$, and its sample density (right).
 
 
 # Example 1 (continuous example)
@@ -57,6 +60,10 @@ g     =  y -> y > 0 ? log(y) : out_of_domain;
 
 # The push-forward
 Q = PushForward(P, f, g, detdf, Float64)
+
+# Reality check if `f` and `g` are indeed inverse, and 
+# if `det(df)` is correct.
+check(Q,args) 
 
 # We can now sample from `Q`,
 # evaluate its log-density 

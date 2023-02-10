@@ -44,8 +44,8 @@ function Gen.logpdf(Q::PushForward{T,T′}, y::T′, args...) where {T, T′}
     end
 end
 
-function Gen.logpdf_grad(d::PushForward{T,T′}, v::T′, args...) where {T, T′} 
-        Zygote.gradient((v, args...) -> logpdf(d, v, args...), v, args...)
+function Gen.logpdf_grad(Q::PushForward{T,T′}, v::T′, args...) where {T, T′} 
+        Zygote.gradient((v, args...) -> logpdf(Q, v, args...), v, args...)
 end
 
 # `Q` has same arguments as its underlying distribution `dist` and
@@ -75,6 +75,53 @@ end
         
 # Not sure how I feel about this but oh well ...
 Base.:*(f::Dict, dist::Gen.Distribution{T}) where {T} = PushForward(dist, f)
+        
+# 
+# Reality Checks (for f,g, and det(df))
+# 
+using LinearAlgebra: norm, det
+using StatsBase: mean
+function check_inverse(Q::PushForward, args; eps=1e-6 ,metric=(x,y) -> norm(x-y), n=100)
+    xs  = [Q.dist(args...) for t=1:n]
+    ys  = Q.f.(xs)
+    xs′ = Q.finv.(ys)
+    err = Q.detdf == nothing ? mean(xs != xs′) : mean(metric.(xs, xs′));
+    println("Mean Inverse error ``|g(f(x)) - x|``: ", err)
+    if err > eps
+        error("`f` and `g` don't seem inverse to each other... high error.")
+    else
+        println("All good.")
+    end
     
-export PushForward, OutOfDomain, out_of_domain, in_domain
+end
+using ForwardDiff: jacobian, derivative
+function check_detdf(Q::PushForward, args; eps=1e-6, n=100)
+    if Q.detdf == nothing; 
+        println("No jacobian to check... all good.")
+        return nothing; 
+    end
+    
+    err = []
+    for t=1:n
+        x = Q.dist(args...)
+        j = typeof(x) == Float64 ? derivative(Q.f,x) : jacobian(Q.f,x);
+        if det(j) == 0; error("Something's off with the determinant... det == 0."); end
+        push!(err, abs(det(j) - Q.detdf(x)))
+    end
+    err = mean(err)
+    println("Mean det ``|det(df_x)|``: ", err)
+    if err > eps
+        error("Something's off with the determinant... high error.")
+    else
+        println("All good.")
+    end   
+end
+        
+function check(Q::PushForward, args; eps=1e-6 ,metric=(x,y) -> norm(x-y), n=100)
+    check_inverse(Q, args; eps=eps ,metric=metric, n=n)
+    check_detdf(Q, args; eps=eps, n=n)
+end
+
+    
+export PushForward, OutOfDomain, out_of_domain, in_domain, check, check_inverse, check_detdf
 end # module
