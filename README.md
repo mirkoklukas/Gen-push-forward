@@ -23,7 +23,7 @@ A sample $x \sim P$ defines a sample $y = f(x) \sim (f_*P)$.
 **Figure 1.** Visualization of Example 1 below &mdash; Pushing forward a normal distribution by the exponential function. *Left:* Comparing the analytically computed density of the push-forward with the approximate empirical density from a number of samples. *Right:* Comparing the density of the push-forward with the wrong density that is missing the correction term.
 
 ![image](imgs/push-forward_2d_example.png)
-**Figure 2.** Pushing forward a multivariate Gaussian by $f:(x,y) \mapsto (x+1,exp(y))$. Densities of the gaussian (left), its push forward (middle) by $f$, and its sample density (right).
+**Figure 2.** Pushing forward a multivariate Gaussian by $f:(x,y) \mapsto (x+1,exp(y))$. Densities of the gaussian (left), its push forward by $f$ (middle) , and its sample density (right).
 
 
 # Example 1 (continuous example)
