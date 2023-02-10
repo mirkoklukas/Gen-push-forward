@@ -1,7 +1,8 @@
 # The push-forward of a distribution
 
-(DRAFT- might lack some technical details)
+We define a "push forward" type for Gen distributions.
 
+**Push-forward.** (DRAFT- might lack some technical details, choosing measures and so on ...)
 Let $f:X \to Y$ be an invertible function and $P$ be a probability distribution on $X$.
 Then the push-forward $f_*P$ of $P$ under $f$ is defined as 
 
@@ -9,13 +10,21 @@ $$
     f_*P := P \circ f^{-1}.
 $$
 
-Here $f^{-1}$ denotes the preimage. Its density $q$ is given by
+Here $f^{-1}$ denotes the preimage. A sample $x \sim P$ defines a sample $y = f(x) \sim (f_*P)$.
+
+Let $Q = f_*P$ be the push-forward of a probability distribution then its density $q$ is given by
 
 $$
-    q(y) = \frac{d(P \circ f^{-1})}{dy}(y)  =  \ldots =p(x) \cdot \frac{1}{|\det df_x|}.
+    q(y) = \frac{dQ}{dy}(y)  =  \ldots =p(x) \cdot \frac{1}{|\det df_x|}.
 $$
 
-A sample $x \sim P$ defines a sample $y = f(x) \sim (f_*P)$.
+**Proof sketch.** Let's just get some intuition why the above holds &mdash; I am aware that this is not a solid proof. Let $B \subset Y$ be a "small" subset containing a previously chosen $y$. Obviously $A = f^{-1}(B) \subset X$ is a subset containing $x = f^{-1}(y)$. Now we can write
+
+$$
+	q(y) \approx \frac{Q(B)}{|B|} = \frac{P(A)}{|f(A)|} = \frac{P(A)}{|A|}\cdot \frac{|A|}{|f(A)|} \approx p(x) \cdot \frac{1}{|\det df_x|}.
+$$
+
+Now make sense of all symbols that are not defined, and add some appropriate limits. &#9724;
 
 
 ![image](imgs/push-forward_1d_example.png)
@@ -24,8 +33,6 @@ A sample $x \sim P$ defines a sample $y = f(x) \sim (f_*P)$.
 
 ![image](imgs/push-forward_2d_example.png)
 **Figure 2.** Pushing forward a multivariate Gaussian by $f:(x,y) \mapsto (x+1,exp(y))$. Densities of the gaussian (left), its push forward by $f$ (middle) , and its sample density (right).
-
-
 
 # Example 1 (continuous example)
 
