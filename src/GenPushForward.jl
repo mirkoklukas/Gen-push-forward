@@ -1,3 +1,4 @@
+#nbx --fname GenPushForward.jl --src src
 module GenPushForward
 using Gen
 using Zygote
@@ -14,7 +15,7 @@ in_domain(f::Function, xs) = filter( x -> f(x) != out_of_domain, xs)
     
 The push-forward of a distribution ...
 """
-struct PushForward{T,T′} <: Gen.Distribution{T′} 
+struct PushForward{T,T′} <: Gen.Distribution{T′} where T
     dist :: Gen.Distribution{T}
     f       :: Function
     finv    :: Function
@@ -120,6 +121,40 @@ end
 function check(Q::PushForward, args; eps=1e-6 ,metric=(x,y) -> norm(x-y), n=100)
     check_inverse(Q, args; eps=eps ,metric=metric, n=n)
     check_detdf(Q, args; eps=eps, n=n)
+end
+
+# Gen's `HeterogeneousMixture` expects `Vector{Distribution{T}}` and doesn't 
+# now what to do with `PushForward`'s, even though it "inherits" from `Distribution{T}`.
+# The signature should be changed to 
+#
+# `HeterogeneousMixture(distributions::Vector{D}) where {T, D <: Distribution{T}}`
+#
+# which solves this issue.
+function Gen.HeterogeneousMixture(distributions::Vector{PushForward{T,T′}}) where {T, T′}
+    _has_output_grad = true
+    _has_argument_grads = Bool[true] # weights
+    _is_discrete = true
+    for dist in distributions
+        _has_output_grad = _has_output_grad && has_output_grad(dist)
+        for has_arg_grad in has_argument_grads(dist)
+            push!(_has_argument_grads, has_arg_grad)
+        end
+        _is_discrete = _is_discrete && is_discrete(dist)
+    end
+    num_args = Int[]
+    starting_args = Int[]
+    for dist in distributions
+        push!(starting_args, sum(num_args) + 1)
+        push!(num_args, length(has_argument_grads(dist)))
+    end
+    K = length(distributions)
+    return HeterogeneousMixture{T}(
+        K, distributions,
+        _has_output_grad,
+        tuple(_has_argument_grads...),
+        _is_discrete,
+        num_args,
+        starting_args)
 end
 
     
